@@ -627,19 +627,59 @@ namespace BuildUtil
 				StreamWriter bat = new StreamWriter(batFileName, false, Str.ShiftJisEncoding);
 				bat.WriteLine("call \"{0}\"", Paths.VisualStudioVCBatchFileName);
 				bat.WriteLine("echo on");
+#if VS15
+				bat.WriteLine("\"{0}\" /toolsversion:15.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#elif VS14
+				bat.WriteLine("\"{0}\" /toolsversion:14.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#elif VS12
+				bat.WriteLine("\"{0}\" /toolsversion:12.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#elif VS11 || VS10
+				bat.WriteLine("\"{0}\" /toolsversion:4.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#else
 				bat.WriteLine("\"{0}\" /toolsversion:3.5 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#endif
 					Paths.MSBuildFileName, Paths.VPN4SolutionFileName);
 				bat.WriteLine("IF ERRORLEVEL 1 GOTO LABEL_ERROR");
 
+#if VS15
+				bat.WriteLine("\"{0}\" /toolsversion:15.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#elif VS14
+				bat.WriteLine("\"{0}\" /toolsversion:14.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#elif VS12
+				bat.WriteLine("\"{0}\" /toolsversion:12.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#elif VS11 || VS10
+				bat.WriteLine("\"{0}\" /toolsversion:4.0 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#else
 				bat.WriteLine("\"{0}\" /toolsversion:3.5 /verbosity:detailed /target:Clean /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#endif
 					Paths.MSBuildFileName, Paths.VPN4SolutionFileName);
 				bat.WriteLine("IF ERRORLEVEL 1 GOTO LABEL_ERROR");
 
+#if VS15
+				bat.WriteLine("\"{0}\" /toolsversion:15.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#elif VS14
+				bat.WriteLine("\"{0}\" /toolsversion:14.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#elif VS12
+				bat.WriteLine("\"{0}\" /toolsversion:12.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#elif VS11 || VS10
+				bat.WriteLine("\"{0}\" /toolsversion:4.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#else
 				bat.WriteLine("\"{0}\" /toolsversion:3.5 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=Win32 \"{1}\"",
+#endif
 					Paths.MSBuildFileName, Paths.VPN4SolutionFileName);
 				bat.WriteLine("IF ERRORLEVEL 1 GOTO LABEL_ERROR");
 
+#if VS15
+				bat.WriteLine("\"{0}\" /toolsversion:15.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#elif VS14
+				bat.WriteLine("\"{0}\" /toolsversion:14.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#elif VS12
+				bat.WriteLine("\"{0}\" /toolsversion:12.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#elif VS11 || VS10
+				bat.WriteLine("\"{0}\" /toolsversion:4.0 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#else
 				bat.WriteLine("\"{0}\" /toolsversion:3.5 /verbosity:detailed /target:Rebuild /property:Configuration=Release /property:Platform=x64 \"{1}\"",
+#endif
 					Paths.MSBuildFileName, Paths.VPN4SolutionFileName);
 				bat.WriteLine("IF ERRORLEVEL 1 GOTO LABEL_ERROR");
 

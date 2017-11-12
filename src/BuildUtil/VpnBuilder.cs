@@ -325,7 +325,11 @@ namespace BuildUtil
 		public const string Prefix = "softether-";
 #else
 		// SoftEther VPN (build by Open Source Developers)
+#if VS15 || VS14 || VS12 || VS11 || VS10
+		public static readonly string VPN4SolutionFileName = Path.Combine(BaseDirName, "SEVPN.VS201x.sln");
+#else
 		public static readonly string VPN4SolutionFileName = Path.Combine(BaseDirName, "SEVPN.sln");
+#endif
 		public static readonly string DebugSnapshotBaseDir = IO.NormalizePath(Path.Combine(BaseDirName, @"..\output\debug"));
 		public static readonly string ReleaseDestDir = IO.NormalizePath(Path.Combine(BaseDirName, @"..\output\pkg"));
 		public const string Prefix = "softether_open-";
@@ -337,7 +341,7 @@ namespace BuildUtil
 		public static readonly string BuildHamcoreFilesDirName = Path.Combine(BinDirName, "BuiltHamcoreFiles");
 		public static readonly string VisualStudioVCDir;
 		public static readonly string VisualStudioVCBatchFileName;
-		public static readonly string DotNetFramework35Dir;
+		public static readonly string MSBuildDir;
 		public static readonly string MSBuildFileName;
 		public static readonly string TmpDirName;
 		public static readonly DateTime StartDateTime = DateTime.Now;
@@ -375,6 +379,22 @@ namespace BuildUtil
 			}
 
 			// Get the VC++ directory
+#if VS15
+			// Visual Studio 2017
+			Paths.VisualStudioVCDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.CurrentUser, @"Software\Microsoft\VisualStudio\15.0_Config\Setup\VC", "ProductDir"));
+#elif VS14
+			// Visual Studio 2015
+			Paths.VisualStudioVCDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.CurrentUser, @"Software\Microsoft\VisualStudio\14.0_Config\Setup\VC", "ProductDir"));
+#elif VS12
+			// Visual Studio 2013
+			Paths.VisualStudioVCDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.CurrentUser, @"Software\Microsoft\VisualStudio\12.0_Config\Setup\VC", "ProductDir"));
+#elif VS11
+			// Visual Studio 2012
+			Paths.VisualStudioVCDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.CurrentUser, @"Software\Microsoft\VisualStudio\11.0_Config\Setup\VC", "ProductDir"));
+#elif VS10
+			// Visual Studio 2010
+			Paths.VisualStudioVCDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.CurrentUser, @"Software\Microsoft\VisualStudio\10.0_Config\Setup\VC", "ProductDir"));
+#else
 			// Visual Studio 2008
 			if (IntPtr.Size == 4)
 			{
@@ -384,6 +404,7 @@ namespace BuildUtil
 			{
 				Paths.VisualStudioVCDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\9.0\Setup\VC", "ProductDir"));
 			}
+#endif
 			if (Str.IsEmptyStr(Paths.VisualStudioVCDir))
 			{
 				throw new ApplicationException("Visual C++ directory not found.\n");
@@ -402,14 +423,26 @@ namespace BuildUtil
 
 			bool x86_dir = false;
 
-			// Get Microsoft SDK 6.0a directory
+			// Get Microsoft SDK directory
 			if (IntPtr.Size == 4)
 			{
+#if VS15 || VS14 || VS12 || VS11
+				Paths.MicrosoftSDKDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.1A", "InstallationFolder"));
+#elif VS10
+				Paths.MicrosoftSDKDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.0A", "InstallationFolder"));
+#else
 				Paths.MicrosoftSDKDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v6.0A", "InstallationFolder"));
+#endif
 			}
 			else
 			{
+#if VS15 || VS14 || VS12 || VS11
+				Paths.MicrosoftSDKDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1A", "InstallationFolder"));
+#elif VS10
+				Paths.MicrosoftSDKDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A", "InstallationFolder"));
+#else
 				Paths.MicrosoftSDKDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.0A", "InstallationFolder"));
+#endif
 			}
 
 			// Get makecat.exe file name
@@ -425,11 +458,36 @@ namespace BuildUtil
 				throw new ApplicationException(string.Format("File '{0}' not found.", Paths.CmdFileName));
 			}
 
-			// Get .NET Framework 3.5 directory
-			Paths.DotNetFramework35Dir = Path.Combine(Env.WindowsDir, @"Microsoft.NET\Framework\v3.5");
+			// Get MSBuild directory
+#if VS15 || VS14 || VS12
+			if (IntPtr.Size == 4)
+			{
+#if VS15
+				Paths.MSBuildDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Wow6432Node\Microsoft\MSBuild\15.0", "MSBuildOverrideTasksPath"));
+#elif VS14
+				Paths.MSBuildDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Wow6432Node\Microsoft\MSBuild\14.0", "MSBuildOverrideTasksPath"));
+#else
+				Paths.MSBuildDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Wow6432Node\Microsoft\MSBuild\12.0", "MSBuildOverrideTasksPath"));
+#endif
+			}
+			else
+			{
+#if VS15
+				Paths.MSBuildDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Microsoft\MSBuild\15.0", "MSBuildOverrideTasksPath"));
+#elif VS14
+				Paths.MSBuildDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Microsoft\MSBuild\14.0", "MSBuildOverrideTasksPath"));
+#else
+				Paths.MSBuildDir = IO.RemoteLastEnMark(Reg.ReadStr(RegRoot.LocalMachine, @"SOFTWARE\Microsoft\MSBuild\12.0", "MSBuildOverrideTasksPath"));
+#endif
+			}
+#elif VS11 || VS10
+			Paths.MSBuildDir = Path.Combine(Env.WindowsDir, @"Microsoft.NET\Framework\v4.0.30319");
+#else
+			Paths.MSBuildDir = Path.Combine(Env.WindowsDir, @"Microsoft.NET\Framework\v3.5");
+#endif
 
-			// Get msbuild.exe directory
-			Paths.MSBuildFileName = Path.Combine(Paths.DotNetFramework35Dir, "MSBuild.exe");
+			// Get msbuild.exe file name
+			Paths.MSBuildFileName = Path.Combine(Paths.MSBuildDir, "MSBuild.exe");
 			if (File.Exists(Paths.MSBuildFileName) == false)
 			{
 				throw new ApplicationException(string.Format("File '{0}' not found.", Paths.MSBuildFileName));

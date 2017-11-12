@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '10.0'">
+    <DefineConstants>TRACE;DEBUG;BU_SOFTETHER;BU_OSS;VS10</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
+    <DefineConstants>TRACE;DEBUG;BU_SOFTETHER;BU_OSS;VS11</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '12.0'">
+    <DefineConstants>TRACE;DEBUG;BU_SOFTETHER;BU_OSS;VS12</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '14.0'">
+    <DefineConstants>TRACE;DEBUG;BU_SOFTETHER;BU_OSS;VS14</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '15.0'">
+    <DefineConstants>TRACE;DEBUG;BU_SOFTETHER;BU_OSS;VS15</DefineConstants>
+  </PropertyGroup>
+</Project>
