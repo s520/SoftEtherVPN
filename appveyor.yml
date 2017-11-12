@@ -19,4 +19,6 @@ build_script:
     cd C:\projects\SoftEtherVPN\src
 
     BuildAll.VS2013.cmd
+
+    exit
 test: off
