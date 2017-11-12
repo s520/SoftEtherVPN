@@ -18,7 +18,7 @@ build_script:
 - cmd: >-
     cd C:\projects\SoftEtherVPN\src
 
-    BuildAll.VS2013.cmd
+    cp ../appveyor/BuildAll.AppVeyor.VS2013.cmd BuildAll.AppVeyor.VS2013.cmd
 
-    exit
+    BuildAll.AppVeyor.VS2013.cmd
 test: off
