@@ -1,0 +1,114 @@
+dist: trusty
+sudo: required
+language: c
+cache:
+  apt: true
+
+env:
+  global:
+    - ZLIB_VER=1.2.11
+    - NCURSES_VER=6.0 
+    - LIBICONV_VER=1.15
+    - READLINE_VER=7.0
+    - OPENSSL_VER=1.0.2m
+
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          packages:
+            - gcc-4.9
+            - g++-4.9
+            - golang-1.6
+          sources:
+            - ubuntu-toolchain-r-test
+      compiler: gcc-4.9
+      env: PLATFORM=linux-x86_64 RELEASE=false
+
+    - os: linux
+      addons:
+        apt:
+          packages:
+            - gcc-5
+            - g++-5
+            - golang-1.6
+          sources:
+            - ubuntu-toolchain-r-test
+      compiler: gcc-5
+      env: PLATFORM=linux-x86_64 RELEASE=false
+
+    - os: linux
+      addons:
+        apt:
+          packages:
+            - gcc-6
+            - g++-6
+            - golang-1.6
+          sources:
+            - ubuntu-toolchain-r-test
+      compiler: gcc-6
+      env: PLATFORM=linux-x86_64 RELEASE=true
+
+    - os: linux
+      addons:
+        apt:
+          packages:
+            - gcc-7
+            - g++-7
+            - golang-1.6
+          sources:
+            - ubuntu-toolchain-r-test
+      compiler: gcc-7
+      env: PLATFORM=linux-x86_64 RELEASE=false
+
+before_script:
+  - mkdir lib && cd lib
+  - wget https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
+  - ./configure --prefix=/usr/local --static
+  - make -j4 && sudo make -j4 install
+  - cd .. && wget https://ftp.gnu.org/gnu/ncurses/ncurses-${NCURSES_VER}.tar.gz && tar zxf ncurses-${NCURSES_VER}.tar.gz && cd ncurses-${NCURSES_VER}
+  - CPPFLAGS=-P ./configure --prefix=/usr/local
+  - make -j4 && sudo make -j4 install
+  - cd .. && wget https://ftp.gnu.org/gnu/libiconv/libiconv-${LIBICONV_VER}.tar.gz && tar zxf libiconv-${LIBICONV_VER}.tar.gz && cd libiconv-${LIBICONV_VER}
+  - ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no
+  - make -j4 && sudo make -j4 install
+  - cd .. && wget https://ftp.gnu.org/gnu/readline/readline-${READLINE_VER}.tar.gz && tar zxf readline-${READLINE_VER}.tar.gz && cd readline-${READLINE_VER}
+  - ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib
+  - make -j4 && sudo make -j4 install
+  - cd .. && wget https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
+  - ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM}
+  - make -j4 && make -j4 test && sudo make -j4 install_sw
+  - if [ "$PLATFORM" == linux-x86_64 ]; then
+      cd ..;
+      wget https://software.intel.com/sites/default/files/article/181731/intel-aesni-sample-library-v1.2.zip;
+      unzip intel-aesni-sample-library-v1.2.zip && cd Intel_AESNI_Sample_Library_v1.2;
+      ./mk_lnx64_all.sh;
+      sudo cp -a intel_aes_lib/lib/x64/intel_aes64.a /usr/local/lib/libintelaes.a;
+    fi
+  - cd ../../
+
+script:
+ - cp travis-ci/Makefile_${PLATFORM} Makefile
+ - make -j4;
+
+after_success:
+  - if [ "$RELEASE" == true ]; then
+      cd travis-ci/release;
+      echo vpnbridge vpnclient vpnserver | xargs -n 1 cp Authors.txt ReadMeFirst_Important_Notices_cn.txt ReadMeFirst_Important_Notices_en.txt ReadMeFirst_Important_Notices_ja.txt ReadMeFirst_License.txt;
+      mkdir vpnbridge/code vpnclient/code vpnserver/code vpnbridge/lib vpnclient/lib vpnserver/lib;
+      echo vpnbridge/lib vpnclient/lib vpnserver/lib | xargs -n 1 cp License.txt;
+      echo vpnbridge/lib vpnclient/lib vpnserver/lib | xargs -n 1 cp /usr/local/lib/libcharset.a /usr/local/lib/libcrypto.a /usr/local/lib/libreadline.a /usr/local/lib/libiconv.a /usr/local/lib/libintelaes.a /usr/local/lib/libncurses.a /usr/local/lib/libssl.a /usr/local/lib/libz.a;
+      cd ../../tmp/as/ && cp vpncmd.a vpnbridge.a ../../travis-ci/release/vpnbridge/code && cp vpncmd.a vpnclient.a ../../travis-ci/release/vpnclient/code && cp vpncmd.a vpnserver.a ../../travis-ci/release/vpnserver/code;
+      sudo chmod 644 ../../bin/vpnserver/hamcore.se2;
+      cd ../../travis-ci/release && echo vpnbridge vpnclient vpnserver | xargs -n 1 cp ../../bin/vpnserver/hamcore.se2;
+      sudo chmod 744 vpnbridge/.install.sh vpnclient/.install.sh vpnserver/.install.sh;
+      mkdir pkg;
+      tar czf pkg/softether_open-vpnbridge-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnbridge;
+      tar czf pkg/softether_open-vpnclient-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnclient;
+      tar czf pkg/softether_open-vpnserver-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnserver;
+      if [ "$TRAVIS_TAG" != "" ]; then
+        go get github.com/tcnksm/ghr;
+        ghr --username s520 --token $GITHUB_TOKEN --replace --prerelease $TRAVIS_TAG pkg/;
+      fi;
+    fi
