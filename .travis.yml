@@ -10,7 +10,7 @@ env:
     - NCURSES_VER=6.0 
     - LIBICONV_VER=1.15
     - READLINE_VER=7.0
-    - OPENSSL_VER=1.0.2l
+    - OPENSSL_VER=1.0.2m
 
 matrix:
   include:
@@ -78,7 +78,7 @@ before_script:
   - make -j4 && sudo make -j4 install
   - cd .. && wget https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
   - ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM}
-  - make -j4 && make -j4 test && sudo make -j4 install_sw
+  - make depend && make -j4 && make -j4 test && sudo make -j4 install_sw
   - if [ "$PLATFORM" == linux-x86_64 ]; then
       cd ..;
       wget https://software.intel.com/sites/default/files/article/181731/intel-aesni-sample-library-v1.2.zip;
