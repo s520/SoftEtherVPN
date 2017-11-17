@@ -21,6 +21,7 @@ matrix:
             - gcc-4.9
             - g++-4.9
             - golang-1.6
+            - xutils-dev
           sources:
             - ubuntu-toolchain-r-test
       compiler: gcc-4.9
@@ -33,6 +34,7 @@ matrix:
             - gcc-5
             - g++-5
             - golang-1.6
+            - xutils-dev
           sources:
             - ubuntu-toolchain-r-test
       compiler: gcc-5
@@ -45,6 +47,7 @@ matrix:
             - gcc-6
             - g++-6
             - golang-1.6
+            - xutils-dev
           sources:
             - ubuntu-toolchain-r-test
       compiler: gcc-6
@@ -57,6 +60,7 @@ matrix:
             - gcc-7
             - g++-7
             - golang-1.6
+            - xutils-dev
           sources:
             - ubuntu-toolchain-r-test
       compiler: gcc-7
