@@ -20,6 +20,7 @@ matrix:
           packages:
             - gcc-4.9
             - g++-4.9
+            - libc6-dev
             - golang-1.6
             - xutils-dev
           sources:
@@ -33,6 +34,7 @@ matrix:
           packages:
             - gcc-5
             - g++-5
+            - libc6-dev
             - golang-1.6
             - xutils-dev
           sources:
@@ -46,6 +48,7 @@ matrix:
           packages:
             - gcc-6
             - g++-6
+            - libc6-dev
             - golang-1.6
             - xutils-dev
           sources:
@@ -59,6 +62,7 @@ matrix:
           packages:
             - gcc-7
             - g++-7
+            - libc6-dev
             - golang-1.6
             - xutils-dev
           sources:
