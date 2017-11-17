@@ -10,7 +10,7 @@ env:
     - NCURSES_VER=6.0 
     - LIBICONV_VER=1.15
     - READLINE_VER=7.0
-    - OPENSSL_VER=1.0.2m
+    - OPENSSL_VER=1.0.2l
 
 matrix:
   include:
