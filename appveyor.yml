@@ -28,12 +28,10 @@ build_script:
 test: off
 deploy_script:
 - cmd: >-
-    IF %RELEASE% == true (
-
-    IF NOT %APPVEYOR_REPO_TAG_NAME% == "" (
+    IF "%RELEASE%" == "true" IF NOT "%APPVEYOR_REPO_TAG_NAME%" == "" (
 
     go get github.com/tcnksm/ghr
 
     ghr --username %APPVEYOR_ACCOUNT_NAME% --token %GITHUB_TOKEN% --replace --prerelease %APPVEYOR_REPO_TAG_NAME% C:\projects\SoftEtherVPN\output\pkg
 
-    ))
+    )
