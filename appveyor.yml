@@ -1,12 +1,13 @@
 version: 1.0.{build}
 environment:
+  GOPATH: C:\gopath
   GITHUB_TOKEN:
     secure: 7PO9U+4orWRHDEbiEGwRmq3BTnssieZnkwX6562UAiogZ49idE2hVqQMhx2jXMca
 branches:
   except:
   - master
 image: Visual Studio 2013
-clone_depth: 1
+clone_depth: 2
 init:
 - ps: >-
     iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -25,3 +26,12 @@ build_script:
 
     BuildAll.AppVeyor.VS2013.cmd
 test: off
+deploy_script:
+- cmd: >-
+    IF %RELEASE% == true IF NOT %APPVEYOR_REPO_TAG_NAME% == "" (
+
+    go get github.com/tcnksm/ghr
+
+    ghr --username %APPVEYOR_ACCOUNT_NAME% --token %GITHUB_TOKEN% --replace --prerelease %APPVEYOR_REPO_TAG_NAME% C:\projects\SoftEtherVPN\output\pkg
+
+    )
