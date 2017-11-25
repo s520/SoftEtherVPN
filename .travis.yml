@@ -66,10 +66,10 @@ matrix:
       addons:
         apt:
           packages:
-            - qemu-user-static
             - gcc-arm-linux-gnueabihf
             - g++-arm-linux-gnueabihf
             - golang-1.6
+            - qemu-user-static
           sources:
             - ubuntu-toolchain-r-test
       compiler: arm-linux-gnueabihf-gcc-4.8
