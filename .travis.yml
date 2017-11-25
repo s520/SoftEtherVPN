@@ -23,7 +23,9 @@ matrix:
             - golang-1.6
           sources:
             - ubuntu-toolchain-r-test
-      compiler: gcc-4.9
+      compiler: 
+        - gcc-4.9
+        - g++-4.9
       env: PLATFORM=linux-x86_64 RELEASE=false
 
     - os: linux
@@ -35,7 +37,9 @@ matrix:
             - golang-1.6
           sources:
             - ubuntu-toolchain-r-test
-      compiler: gcc-5
+      compiler: 
+        - gcc-5
+        - g++-5
       env: PLATFORM=linux-x86_64 RELEASE=false
 
     - os: linux
@@ -47,7 +51,9 @@ matrix:
             - golang-1.6
           sources:
             - ubuntu-toolchain-r-test
-      compiler: gcc-6
+      compiler: 
+        - gcc-6
+        - g++-6
       env: PLATFORM=linux-x86_64 RELEASE=true
 
     - os: linux
@@ -59,10 +65,13 @@ matrix:
             - golang-1.6
           sources:
             - ubuntu-toolchain-r-test
-      compiler: gcc-7
+      compiler: 
+        - gcc-7
+        - g++-7
       env: PLATFORM=linux-x86_64 RELEASE=false
 
 before_script:
+  - gcc --version && g++ --version
   - mkdir lib && cd lib
   - wget https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
   - ./configure --prefix=/usr/local --static
