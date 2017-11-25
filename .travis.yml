@@ -73,14 +73,14 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
       compiler: arm-linux-gnueabihf-gcc-4.8
-      env: CXX=arm-linux-gnueabihf-g++-4.8 PLATFORM=linux-generic32 HOST=arm-linux-gnueabihf CROSS_COMPILE=arm-linux-gnueabihf- RELEASE=false
+      env: CXX=arm-linux-gnueabihf-g++-4.8 PLATFORM=linux-generic32 HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- RELEASE=false
 
 before_script:
   - ${CC} --version && ${CXX} --version
-  - if [ "$CROSS_COMPILE" != "" ]; then
-      AR=${CROSS_COMPILE}ar;
-      RANLIB=${CROSS_COMPILE}ranlib;
-      LD=${CROSS_COMPILE}ld;
+  - if [ "$CROSS_COMPILER" != "" ]; then
+      AR=${CROSS_COMPILER}ar;
+      RANLIB=${CROSS_COMPILER}ranlib;
+      LD=${CROSS_COMPILER}ld;
     fi
   - mkdir lib && cd lib
   - wget -nv https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
