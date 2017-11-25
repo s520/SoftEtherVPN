@@ -77,6 +77,11 @@ matrix:
 
 before_script:
   - ${CC} --version && ${CXX} --version
+  - if [ "$CROSS_COMPILE" != "" ]; then
+      AR=${CROSS_COMPILE}ar;
+      RANLIB=${CROSS_COMPILE}ranlib;
+      LD=${CROSS_COMPILE}ld;
+    fi
   - mkdir lib && cd lib
   - wget https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
   - ./configure --prefix=/usr/local --static
@@ -103,10 +108,7 @@ before_script:
     fi
   - make -j4 && sudo make -j4 install
   - cd .. && wget https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
-  - if [ "$CROSS_COMPILE" != "" ]; then
-      ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib --cross-compile-prefix=${CROSS_COMPILE} zlib no-shared ${PLATFORM};
-    else
-      ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM};
+  - ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM}
     fi
   - make -j4 && make -j1 test && sudo make -j4 install_sw
   - if [ "$PLATFORM" == linux-x86_64 ]; then
