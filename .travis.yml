@@ -7,7 +7,7 @@ cache:
 env:
   global:
     - ZLIB_VER=1.2.11
-    - NCURSES_VER=6.0 
+    - NCURSES_VER=6.0
     - LIBICONV_VER=1.15
     - READLINE_VER=7.0
     - OPENSSL_VER=1.0.2m
@@ -78,9 +78,9 @@ matrix:
 before_script:
   - ${CC} --version && ${CXX} --version
   - if [ "$CROSS_COMPILER" != "" ]; then
-      AR=${CROSS_COMPILER}ar;
-      RANLIB=${CROSS_COMPILER}ranlib;
-      LD=${CROSS_COMPILER}ld;
+      export AR=${CROSS_COMPILER}ar;
+      export RANLIB=${CROSS_COMPILER}ranlib;
+      export LD=${CROSS_COMPILER}ld;
     fi
   - if [ "$HOST" == "arm-linux-gnueabihf" ]; then
       cd /lib/;
@@ -127,7 +127,11 @@ before_script:
 
 script:
  - cp travis-ci/Makefile_${PLATFORM} Makefile
- - make -j4;
+ - if [ "$CROSS_COMPILER" != "" ]; then
+     make;
+   else
+     make -j4;
+   fi
 
 after_success:
   - if [ "$RELEASE" == true ]; then
