@@ -82,6 +82,12 @@ before_script:
       RANLIB=${CROSS_COMPILER}ranlib;
       LD=${CROSS_COMPILER}ld;
     fi
+  - if [ "$HOST" == "arm-linux-gnueabihf" ]; then
+      cd /lib/;
+      sudo ln -s /usr/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3 .;
+      sudo ln -s /usr/arm-linux-gnueabihf/lib arm-linux-gnueabihf;
+      cd ${TRAVIS_BUILD_DIR};
+    fi
   - mkdir lib && cd lib
   - wget -nv https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
   - ./configure --prefix=/usr/local --static
