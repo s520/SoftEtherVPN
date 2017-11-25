@@ -62,6 +62,19 @@ matrix:
       compiler: gcc-7
       env: CXX=g++-7 PLATFORM=linux-x86_64 RELEASE=false
 
+    - os: linux
+      addons:
+        apt:
+          packages:
+            - qemu-user-static
+            - gcc-arm-linux-gnueabihf
+            - g++-arm-linux-gnueabihf
+            - golang-1.6
+          sources:
+            - ubuntu-toolchain-r-test
+      compiler: arm-linux-gnueabihf-gcc-4.8
+      env: CXX=arm-linux-gnueabihf-g++-4.8 PLATFORM=linux-generic32 HOST=arm-linux-gnueabihf CROSS_COMPILE=arm-linux-gnueabihf- RELEASE=false
+
 before_script:
   - ${CC} --version && ${CXX} --version
   - mkdir lib && cd lib
@@ -69,16 +82,32 @@ before_script:
   - ./configure --prefix=/usr/local --static
   - make -j4 && sudo make -j4 install
   - cd .. && wget https://ftp.gnu.org/gnu/ncurses/ncurses-${NCURSES_VER}.tar.gz && tar zxf ncurses-${NCURSES_VER}.tar.gz && cd ncurses-${NCURSES_VER}
-  - CPPFLAGS=-P ./configure --prefix=/usr/local
+  - if [ "$HOST" != "" ]; then
+      CPPFLAGS=-P ./configure --prefix=/usr/local --host=${HOST};
+    else
+      CPPFLAGS=-P ./configure --prefix=/usr/local;
+    fi
   - make -j4 && sudo make -j4 install
   - cd .. && wget https://ftp.gnu.org/gnu/libiconv/libiconv-${LIBICONV_VER}.tar.gz && tar zxf libiconv-${LIBICONV_VER}.tar.gz && cd libiconv-${LIBICONV_VER}
-  - ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no
+  - if [ "$HOST" != "" ]; then
+      ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no --host=${HOST};
+    else
+      ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no;
+    fi
   - make -j4 && sudo make -j4 install
   - cd .. && wget https://ftp.gnu.org/gnu/readline/readline-${READLINE_VER}.tar.gz && tar zxf readline-${READLINE_VER}.tar.gz && cd readline-${READLINE_VER}
-  - ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib
+  - if [ "$HOST" != "" ]; then
+      ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib --host=${HOST};
+    else
+      ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib;
+    fi
   - make -j4 && sudo make -j4 install
   - cd .. && wget https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
-  - ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM}
+  - if [ "$CROSS_COMPILE" != "" ]; then
+      ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib --cross-compile-prefix=${CROSS_COMPILE} zlib no-shared ${PLATFORM};
+    else
+      ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM};
+    fi
   - make -j4 && make -j1 test && sudo make -j4 install_sw
   - if [ "$PLATFORM" == linux-x86_64 ]; then
       cd ..;
