@@ -83,37 +83,36 @@ before_script:
       LD=${CROSS_COMPILE}ld;
     fi
   - mkdir lib && cd lib
-  - wget https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
+  - wget -nv https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
   - ./configure --prefix=/usr/local --static
   - make -j4 && sudo make -j4 install
-  - cd .. && wget https://ftp.gnu.org/gnu/ncurses/ncurses-${NCURSES_VER}.tar.gz && tar zxf ncurses-${NCURSES_VER}.tar.gz && cd ncurses-${NCURSES_VER}
+  - cd .. && wget -nv https://ftp.gnu.org/gnu/ncurses/ncurses-${NCURSES_VER}.tar.gz && tar zxf ncurses-${NCURSES_VER}.tar.gz && cd ncurses-${NCURSES_VER}
   - if [ "$HOST" != "" ]; then
       CPPFLAGS=-P ./configure --prefix=/usr/local --host=${HOST};
     else
       CPPFLAGS=-P ./configure --prefix=/usr/local;
     fi
   - make -j4 && sudo make -j4 install
-  - cd .. && wget https://ftp.gnu.org/gnu/libiconv/libiconv-${LIBICONV_VER}.tar.gz && tar zxf libiconv-${LIBICONV_VER}.tar.gz && cd libiconv-${LIBICONV_VER}
+  - cd .. && wget -nv https://ftp.gnu.org/gnu/libiconv/libiconv-${LIBICONV_VER}.tar.gz && tar zxf libiconv-${LIBICONV_VER}.tar.gz && cd libiconv-${LIBICONV_VER}
   - if [ "$HOST" != "" ]; then
       ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no --host=${HOST};
     else
       ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no;
     fi
   - make -j4 && sudo make -j4 install
-  - cd .. && wget https://ftp.gnu.org/gnu/readline/readline-${READLINE_VER}.tar.gz && tar zxf readline-${READLINE_VER}.tar.gz && cd readline-${READLINE_VER}
+  - cd .. && wget -nv https://ftp.gnu.org/gnu/readline/readline-${READLINE_VER}.tar.gz && tar zxf readline-${READLINE_VER}.tar.gz && cd readline-${READLINE_VER}
   - if [ "$HOST" != "" ]; then
       ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib --host=${HOST};
     else
       ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib;
     fi
   - make -j4 && sudo make -j4 install
-  - cd .. && wget https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
+  - cd .. && wget -nv https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
   - ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM}
-    fi
   - make -j4 && make -j1 test && sudo make -j4 install_sw
   - if [ "$PLATFORM" == linux-x86_64 ]; then
       cd ..;
-      wget https://software.intel.com/sites/default/files/article/181731/intel-aesni-sample-library-v1.2.zip;
+      wget -nv https://software.intel.com/sites/default/files/article/181731/intel-aesni-sample-library-v1.2.zip;
       unzip intel-aesni-sample-library-v1.2.zip && cd Intel_AESNI_Sample_Library_v1.2;
       ./mk_lnx64_all.sh;
       sudo cp -a intel_aes_lib/lib/x64/intel_aes64.a /usr/local/lib/libintelaes.a;
