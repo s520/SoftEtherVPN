@@ -76,14 +76,14 @@ matrix:
       addons:
         apt:
           packages:
-            - build-essential
-            - m4
-            - gawk
+            - gcc-6
+            - g++-6
             - golang-1.6
             - qemu-user-static
           sources:
             - ubuntu-toolchain-r-test
-      env: PLATFORM=linux-generic32 HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- ARCH=arm ARCH_FULL=armv6 RELEASE=false
+      compiler: gcc-6
+      env: CXX=g++-6 PLATFORM=linux-generic32 HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- ARCH=arm ARCH_FULL=armv6 RELEASE=false
 
 before_script:
   - if [ "$HOST" == "arm-linux-gnueabihf" ]; then
