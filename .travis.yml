@@ -20,7 +20,7 @@ env:
     - KERNEL_VER=4.x
     - KERNEL_VER_FULL=4.9.41
     - GCC_VER=6.3.0
-    - GLIBC_VER=2.26
+    - GLIBC_VER=2.25
 
 matrix:
   include:
@@ -76,26 +76,17 @@ matrix:
       addons:
         apt:
           packages:
-            - binutils-2.26
             - golang-1.6
             - qemu-user-static
           sources:
             - ubuntu-toolchain-r-test
-      env: PLATFORM=linux-generic32 CACHE_NAME=JOB5 NEW_BINUTILS_PATH=/usr/lib/binutils-2.26/bin HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- ARCH=arm ARCH_FULL=armv6 RELEASE=false
+      env: PLATFORM=linux-generic32 CACHE_NAME=JOB5 HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- ARCH=arm ARCH_FULL=armv6 RELEASE=false
 
 before_script:
   - if [ "$HOST" == "arm-linux-gnueabihf" ]; then
       export ARM_CROSS=arm-cross-tools;
       export ARM_CROSS_PATH=${HOME}/${ARM_CROSS};
-      if [ "$NEW_BINUTILS_PATH" != "" ]; then
-        export PATH=$PATH:${NEW_BINUTILS_PATH}:${ARM_CROSS_PATH}/bin;
-        export AR=${NEW_BINUTILS_PATH}/ar;
-        export AS=${NEW_BINUTILS_PATH}/as;
-        export RANLIB=${NEW_BINUTILS_PATH}/ranlib;
-        export LD=${NEW_BINUTILS_PATH}/ld;
-      else
-        export PATH=$PATH:${ARM_CROSS_PATH}/bin;
-      fi;
+      export PATH=$PATH:${ARM_CROSS_PATH}/bin;
       cd ${HOME};
       if [ ! -e cache/${ARM_CROSS}.tar.gz ]; then
         mkdir arm_cross_src && cd arm_cross_src;
@@ -117,7 +108,7 @@ before_script:
         ../gcc-${GCC_VER}/configure --prefix=${ARM_CROSS_PATH} --program-prefix=${CROSS_COMPILER} --target=${HOST} --enable-lto --enable-languages=c,c++ --disable-multilib --enable-interwork --with-arch=${ARCH_FULL} --with-fpu=vfp --with-float=hard --enable-checking=release --enable-linker-build-id --enable-gnu-unique-object --enable-threads=posix --disable-sjlj-exceptions --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes;
         make -j4 all-gcc && make install-gcc;
         cd .. && wget -nv https://ftp.gnu.org/gnu/glibc/glibc-${GLIBC_VER}.tar.xz && tar Jxf glibc-${GLIBC_VER}.tar.xz && mkdir build_glibc-${GLIBC_VER}_arm && cd build_glibc-${GLIBC_VER}_arm;
-        AR=${NEW_BINUTILS_PATH}/ar AS=${NEW_BINUTILS_PATH}/as RANLIB=${NEW_BINUTILS_PATH}/ranlib LD=${NEW_BINUTILS_PATH}/ld ../glibc-${GLIBC_VER}/configure --prefix=${ARM_CROSS_PATH}/${HOST} --build=${MACHTYPE} --host=${HOST} --target=${HOST} --with-headers=${ARM_CROSS_PATH}/${HOST}/include --disable-multilib --enable-add-ons libc_cv_forced_unwind=yes;
+        ../glibc-${GLIBC_VER}/configure --prefix=${ARM_CROSS_PATH}/${HOST} --build=${MACHTYPE} --host=${HOST} --target=${HOST} --with-headers=${ARM_CROSS_PATH}/${HOST}/include --disable-multilib --enable-add-ons libc_cv_forced_unwind=yes;
         make install-bootstrap-headers=yes install-headers && make -j4 csu/subdir_lib && install csu/crt1.o csu/crti.o csu/crtn.o ${ARM_CROSS_PATH}/${HOST}/lib && ${CROSS_COMPILER}gcc -nostdlib -nostartfiles -shared -x c /dev/null -o ${ARM_CROSS_PATH}/${HOST}/lib/libc.so && touch ${ARM_CROSS_PATH}/${HOST}/include/gnu/stubs.h;
         cd ../build_gcc-${GCC_VER}_arm && make -j4 all-target-libgcc && make install-target-libgcc;
         cd ../build_glibc-${GLIBC_VER}_arm && make -j4 && make install;
