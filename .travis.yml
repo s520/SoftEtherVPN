@@ -118,7 +118,7 @@ before_script:
         cd ../build_gcc-${GCC_VER}_arm && make -j4 && make install;
         cd ../../;
         tar czf cache/${ARM_CROSS}.tar.gz --no-same-owner --no-same-permissions ${ARM_CROSS};
-      else;
+      else
         tar zxf cache/${ARM_CROSS}.tar.gz;
       fi;
       cd /lib/;
