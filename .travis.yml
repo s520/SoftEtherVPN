@@ -81,17 +81,17 @@ matrix:
             - qemu-user-static
           sources:
             - ubuntu-toolchain-r-test
-      env: PLATFORM=linux-generic32 CACHE_NAME=JOB5 HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- ARCH=arm ARCH_FULL=armv6 RELEASE=false
+      env: PLATFORM=linux-generic32 CACHE_NAME=JOB5 NEW_BINUTILS_PATH=/usr/lib/binutils-2.26/bin HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- ARCH=arm ARCH_FULL=armv6 RELEASE=false
 
 before_script:
   - if [ "$HOST" == "arm-linux-gnueabihf" ]; then
       export ARM_CROSS=arm-cross-tools;
       export ARM_CROSS_PATH=${HOME}/${ARM_CROSS};
-      export PATH=$PATH:${ARM_CROSS_PATH}/bin;
-      export AR=/usr/bin/ar-2.26;
-      export AS=/usr/bin/as-2.26;
-      export RANLIB=/usr/bin/ranlib-2.26;
-      export LD=/usr/bin/ld-2.26;
+      if [ "$NEW_BINUTILS_PATH" != "" ]; then
+        export PATH=$PATH:${NEW_BINUTILS_PATH}:${ARM_CROSS_PATH}/bin;
+      else
+        export PATH=$PATH:${ARM_CROSS_PATH}/bin;
+      fi;
       cd ${HOME};
       if [ ! -e cache/${ARM_CROSS}.tar.gz ]; then
         mkdir arm_cross_src && cd arm_cross_src;
