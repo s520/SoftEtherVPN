@@ -90,7 +90,7 @@ before_script:
       export ARM_CROSS=arm-cross-tools;
       export ARM_CROSS_PATH=${HOME}/${ARM_CROSS};
       export PATH=$PATH:${ARM_CROSS_PATH}/bin;
-      cd ${HOME}
+      cd ${HOME};
       if [ ! -e cache/${ARM_CROSS}.tar.gz ];then
         mkdir arm_cross_src && cd arm_cross_src;
         wget -nv ftp://ftp.gnu.org/gnu/gmp/gmp-${GMP_VER}.tar.xz && tar Jxf gmp-${GMP_VER}.tar.xz && cd gmp-${GMP_VER};
