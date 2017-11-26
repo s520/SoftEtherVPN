@@ -109,7 +109,7 @@ before_script:
         make -j4 all-gcc && make install-gcc;
         cd .. && wget -nv https://ftp.gnu.org/gnu/glibc/glibc-${GLIBC_VER}.tar.xz && tar Jxf glibc-${GLIBC_VER}.tar.xz && mkdir build_glibc-${GLIBC_VER}_arm && cd build_glibc-${GLIBC_VER}_arm;
         ../glibc-${GLIBC_VER}/configure --prefix=${ARM_CROSS_PATH}/${HOST} --build=${MACHTYPE} --host=${HOST} --target=${HOST} --with-headers=${ARM_CROSS_PATH}/${HOST}/include --disable-multilib --enable-add-ons libc_cv_forced_unwind=yes;
-        make install-bootstrap-headers=yes install-headers && make -j4 csu/subdir_lib && install csu/crt1.o csu/crti.o csu/crtn.o ${ARM_CROSS_PATH}/${HOST}/lib && ${CROSS_COMPILER}gcc -nostdlib -nostartfiles -shared -x c /dev/null -o ${ARM_CROSS_PATH}/${HOST}/lib/libc.so && touch ${ARM_CROSS_PATH}/${HOST}/include/gnu/stubs.h;
+        make install-bootstrap-headers=yes install-headers && make csu/subdir_lib && install csu/crt1.o csu/crti.o csu/crtn.o ${ARM_CROSS_PATH}/${HOST}/lib && ${CROSS_COMPILER}gcc -nostdlib -nostartfiles -shared -x c /dev/null -o ${ARM_CROSS_PATH}/${HOST}/lib/libc.so && touch ${ARM_CROSS_PATH}/${HOST}/include/gnu/stubs.h;
         cd ../build_gcc-${GCC_VER}_arm && make -j4 all-target-libgcc && make install-target-libgcc;
         cd ../build_glibc-${GLIBC_VER}_arm && make -j4 && make install;
         cd ../build_gcc-${GCC_VER}_arm && make -j4 && make install;
