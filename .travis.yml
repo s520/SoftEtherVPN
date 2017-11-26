@@ -4,7 +4,7 @@ language: c
 cache:
   apt: true
   directories:
-    - $HOME/arm-cross-tools.tar.gz
+    - $HOME/cache
 
 env:
   global:
@@ -91,7 +91,7 @@ before_script:
       export ARM_CROSS_PATH=${HOME}/${ARM_CROSS};
       export PATH=$PATH:${ARM_CROSS_PATH}/bin;
       cd ${HOME}
-      if [ ! -e ${ARM_CROSS}.tar.gz ];then
+      if [ ! -e cache/${ARM_CROSS}.tar.gz ];then
         mkdir arm_cross_src && cd arm_cross_src;
         wget -nv ftp://ftp.gnu.org/gnu/gmp/gmp-${GMP_VER}.tar.xz && tar Jxf gmp-${GMP_VER}.tar.xz && cd gmp-${GMP_VER};
         ./configure;
@@ -117,9 +117,9 @@ before_script:
         cd ../build_glibc-${GLIBC_VER}_arm && make -j4 && make install;
         cd ../build_gcc-${GCC_VER}_arm && make -j4 && make install;
         cd ../../;
-        tar czf ${ARM_CROSS}.tar.gz --no-same-owner --no-same-permissions ${ARM_CROSS};
+        tar czf cache/${ARM_CROSS}.tar.gz --no-same-owner --no-same-permissions ${ARM_CROSS};
       else;
-        tar zxf ${ARM_CROSS}.tar.gz;
+        tar zxf cache/${ARM_CROSS}.tar.gz;
       fi;
       cd /lib/;
       sudo ln -s ${ARM_CROSS_PATH}/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3 .;
