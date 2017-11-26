@@ -89,6 +89,10 @@ before_script:
       export ARM_CROSS_PATH=${HOME}/${ARM_CROSS};
       if [ "$NEW_BINUTILS_PATH" != "" ]; then
         export PATH=$PATH:${NEW_BINUTILS_PATH}:${ARM_CROSS_PATH}/bin;
+        export AR=${NEW_BINUTILS_PATH}/ar;
+        export AS=${NEW_BINUTILS_PATH}/as;
+        export RANLIB=${NEW_BINUTILS_PATH}/ranlib;
+        export LD=${NEW_BINUTILS_PATH}/ld;
       else
         export PATH=$PATH:${ARM_CROSS_PATH}/bin;
       fi;
