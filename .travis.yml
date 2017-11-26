@@ -95,13 +95,13 @@ before_script:
         mkdir arm_cross_src && cd arm_cross_src;
         wget -nv ftp://ftp.gnu.org/gnu/gmp/gmp-${GMP_VER}.tar.xz && tar Jxf gmp-${GMP_VER}.tar.xz && cd gmp-${GMP_VER};
         ./configure;
-        make -j4 && make install && /sbin/ldconfig;
+        make -j4 && sudo make install && sudo /sbin/ldconfig;
         cd .. && wget -nv http://www.mpfr.org/mpfr-current/mpfr-${MPFR_VER}.tar.xz && tar Jxf mpfr-${MPFR_VER}.tar.xz && cd mpfr-${MPFR_VER};
         ./configure;
-        make -j4 && make install && /sbin/ldconfig;
+        make -j4 && sudo make install && sudo /sbin/ldconfig;
         cd .. && wget -nv ftp://ftp.gnu.org/gnu/mpc/mpc-${MPC_VER}.tar.gz && tar zxf mpc-${MPC_VER}.tar.gz && cd mpc-${MPC_VER};
         ./configure;
-        make -j4 && make install && /sbin/ldconfig;
+        make -j4 && sudo make install && sudo /sbin/ldconfig;
         cd .. && wget -nv https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.xz && tar Jxf binutils-${BINUTILS_VER}.tar.xz && mkdir build_binutils-${BINUTILS_VER}_arm && cd build_binutils-${BINUTILS_VER}_arm;
         ../binutils-${BINUTILS_VER}/configure --prefix=${ARM_CROSS_PATH} --program-prefix=${CROSS_COMPILER} --target=${HOST} --enable-lto --enable-interwork --disable-multilib --with-arch=${ARCH_FULL};
         make -j4 && make install;
