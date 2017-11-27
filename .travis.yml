@@ -77,7 +77,7 @@ matrix:
 before_script:
   - if [ "$HOST" == "arm-linux-gnueabihf" ]; then
       export ARM_CROSS=arm-cross-tools;
-      export ARM_CROSS_PATH=${HOME}/${ARM_CROSS};
+      export ARM_CROSS_PATH=/home/travis/build/s520/arm-linux-gnueabihf/${ARM_CROSS};
       export PATH=$PATH:${ARM_CROSS_PATH}/bin;
       cd ${HOME};
       if [ ! -e cache/${HOST}.tar.gz ]; then
@@ -85,6 +85,7 @@ before_script:
         cd ..;
       fi;
       tar zxf cache/${HOST}.tar.gz;
+      mv ${ARM_CROSS} /home/travis/build/s520/arm-linux-gnueabihf/${ARM_CROSS};
       cd /lib/;
       sudo ln -s ${ARM_CROSS_PATH}/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3 .;
       sudo ln -s ${ARM_CROSS_PATH}/arm-linux-gnueabihf/lib arm-linux-gnueabihf;
