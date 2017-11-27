@@ -147,8 +147,8 @@ after_success:
       else
         cd linux-x64-64bit;
       fi;
-      mv vpnbridge vpnclient vpnserver ../
-      cd ../
+      mv vpnbridge vpnclient vpnserver ../;
+      cd ../;
       echo vpnbridge vpnclient vpnserver | xargs -n 1 cp Authors.txt ReadMeFirst_Important_Notices_cn.txt ReadMeFirst_Important_Notices_en.txt ReadMeFirst_Important_Notices_ja.txt ReadMeFirst_License.txt;
       mkdir vpnbridge/code vpnclient/code vpnserver/code vpnbridge/lib vpnclient/lib vpnserver/lib;
       echo vpnbridge/lib vpnclient/lib vpnserver/lib | xargs -n 1 cp License.txt;
