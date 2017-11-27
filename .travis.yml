@@ -72,12 +72,12 @@ matrix:
             - qemu-user-static
           sources:
             - ubuntu-toolchain-r-test
-      env: PLATFORM=linux-generic32 CACHE_NAME=JOB5 HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- RELEASE=false
+      env: PLATFORM=linux-generic32 CACHE_NAME=JOB5 HOST=arm-linux-gnueabihf CROSS_COMPILER=arm-linux-gnueabihf- RELEASE=true
 
 before_script:
   - if [ "$HOST" == "arm-linux-gnueabihf" ]; then
       export ARM_CROSS=arm-cross-tools;
-      export ARM_CROSS_PATH=/home/travis/build/s520/arm-linux-gnueabihf/${ARM_CROSS};
+      export ARM_CROSS_PATH=/usr/local/${ARM_CROSS};
       export PATH=$PATH:${ARM_CROSS_PATH}/bin;
       cd ${HOME};
       if [ ! -e cache/${HOST}.tar.gz ]; then
@@ -85,8 +85,8 @@ before_script:
         cd ..;
       fi;
       tar zxf cache/${HOST}.tar.gz;
-      mkdir -p ${ARM_CROSS_PATH};
-      mv ${ARM_CROSS} /home/travis/build/s520/arm-linux-gnueabihf;
+      sudo mv ${ARM_CROSS} /usr/local;
+      sudo chown travis ${ARM_CROSS_PATH};
       cd /lib/;
       sudo ln -s ${ARM_CROSS_PATH}/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3 .;
       sudo ln -s ${ARM_CROSS_PATH}/arm-linux-gnueabihf/lib arm-linux-gnueabihf;
@@ -142,18 +142,35 @@ script:
 after_success:
   - if [ "$RELEASE" == true ]; then
       cd travis-ci/release;
+      if [ "$HOST" == "arm-linux-gnueabihf" ]; then
+        cd linux-arm_eabi-32bit;
+      else
+        cd linux-x64-64bit;
+      fi;
+      mv vpnbridge vpnclient vpnserver ../
+      cd ../
       echo vpnbridge vpnclient vpnserver | xargs -n 1 cp Authors.txt ReadMeFirst_Important_Notices_cn.txt ReadMeFirst_Important_Notices_en.txt ReadMeFirst_Important_Notices_ja.txt ReadMeFirst_License.txt;
       mkdir vpnbridge/code vpnclient/code vpnserver/code vpnbridge/lib vpnclient/lib vpnserver/lib;
       echo vpnbridge/lib vpnclient/lib vpnserver/lib | xargs -n 1 cp License.txt;
-      echo vpnbridge/lib vpnclient/lib vpnserver/lib | xargs -n 1 cp /usr/local/lib/libcharset.a /usr/local/lib/libcrypto.a /usr/local/lib/libreadline.a /usr/local/lib/libiconv.a /usr/local/lib/libintelaes.a /usr/local/lib/libncurses.a /usr/local/lib/libssl.a /usr/local/lib/libz.a;
+      if [ "$HOST" == "arm-linux-gnueabihf" ]; then
+        echo vpnbridge/lib vpnclient/lib vpnserver/lib | xargs -n 1 cp /usr/local/lib/libcharset.a /usr/local/lib/libcrypto.a /usr/local/lib/libreadline.a /usr/local/lib/libiconv.a /usr/local/lib/libncurses.a /usr/local/lib/libssl.a /usr/local/lib/libz.a;
+      else
+        echo vpnbridge/lib vpnclient/lib vpnserver/lib | xargs -n 1 cp /usr/local/lib/libcharset.a /usr/local/lib/libcrypto.a /usr/local/lib/libreadline.a /usr/local/lib/libiconv.a /usr/local/lib/libintelaes.a /usr/local/lib/libncurses.a /usr/local/lib/libssl.a /usr/local/lib/libz.a;
+      fi;
       cd ../../tmp/as/ && cp vpncmd.a vpnbridge.a ../../travis-ci/release/vpnbridge/code && cp vpncmd.a vpnclient.a ../../travis-ci/release/vpnclient/code && cp vpncmd.a vpnserver.a ../../travis-ci/release/vpnserver/code;
       sudo chmod 644 ../../bin/vpnserver/hamcore.se2;
       cd ../../travis-ci/release && echo vpnbridge vpnclient vpnserver | xargs -n 1 cp ../../bin/vpnserver/hamcore.se2;
       sudo chmod 744 vpnbridge/.install.sh vpnclient/.install.sh vpnserver/.install.sh;
       mkdir pkg;
-      tar czf pkg/softether_open-vpnbridge-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnbridge;
-      tar czf pkg/softether_open-vpnclient-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnclient;
-      tar czf pkg/softether_open-vpnserver-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnserver;
+      if [ "$HOST" == "arm-linux-gnueabihf" ]; then
+        tar czf pkg/softether_open-vpnbridge-v4.24-9651-beta-linux-arm_eabi-32bit.tar.gz --no-same-owner --no-same-permissions vpnbridge;
+        tar czf pkg/softether_open-vpnclient-v4.24-9651-beta-linux-arm_eabi-32bit.tar.gz --no-same-owner --no-same-permissions vpnclient;
+        tar czf pkg/softether_open-vpnserver-v4.24-9651-beta-linux-arm_eabi-32bit.tar.gz --no-same-owner --no-same-permissions vpnserver;
+      else
+        tar czf pkg/softether_open-vpnbridge-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnbridge;
+        tar czf pkg/softether_open-vpnclient-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnclient;
+        tar czf pkg/softether_open-vpnserver-v4.24-9651-beta-linux-x64-64bit.tar.gz --no-same-owner --no-same-permissions vpnserver;
+      fi;
       if [ "$TRAVIS_TAG" != "" ]; then
         go get github.com/tcnksm/ghr;
         ghr --username s520 --token $GITHUB_TOKEN --replace --prerelease $TRAVIS_TAG pkg/;
