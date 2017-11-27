@@ -81,8 +81,7 @@ before_script:
       export PATH=$PATH:${ARM_CROSS_PATH}/bin;
       cd ${HOME};
       if [ ! -e cache/${HOST}.tar.gz ]; then
-        mkdir cache && cd cache;
-        wget https://github.com/s520/arm-linux-gnueabihf/releases/download/Pre-release/${HOST}.tar.gz;
+        cd cache && wget -nv https://github.com/s520/arm-linux-gnueabihf/releases/download/Pre-release/${HOST}.tar.gz;
         cd ..;
       fi;
       tar zxf cache/${HOST}.tar.gz;
