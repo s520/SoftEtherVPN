@@ -85,7 +85,8 @@ before_script:
         cd ..;
       fi;
       tar zxf cache/${HOST}.tar.gz;
-      mv ${ARM_CROSS} /home/travis/build/s520/arm-linux-gnueabihf/${ARM_CROSS};
+      mkdir -p ${ARM_CROSS_PATH};
+      mv ${ARM_CROSS} ${ARM_CROSS_PATH};
       cd /lib/;
       sudo ln -s ${ARM_CROSS_PATH}/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3 .;
       sudo ln -s ${ARM_CROSS_PATH}/arm-linux-gnueabihf/lib arm-linux-gnueabihf;
