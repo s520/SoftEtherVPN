@@ -89,32 +89,33 @@ before_script:
       export ARM_CROSS_PATH=${HOME}/${ARM_CROSS};
       export PATH=$PATH:${ARM_CROSS_PATH}/bin;
       unset CC;
+      unset CXX;
       cd ${HOME};
       if [ ! -e cache/${ARM_CROSS}.tar.gz ]; then
         mkdir arm_cross_src && cd arm_cross_src;
         wget -nv ftp://ftp.gnu.org/gnu/gmp/gmp-${GMP_VER}.tar.xz && tar Jxf gmp-${GMP_VER}.tar.xz && cd gmp-${GMP_VER};
         ./configure;
-        make -j4 && sudo make install && sudo /sbin/ldconfig;
+        make -s -j4 && sudo make install && sudo /sbin/ldconfig;
         cd .. && wget -nv http://www.mpfr.org/mpfr-current/mpfr-${MPFR_VER}.tar.xz && tar Jxf mpfr-${MPFR_VER}.tar.xz && cd mpfr-${MPFR_VER};
         ./configure;
-        make -j4 && sudo make install && sudo /sbin/ldconfig;
+        make -s -j4 && sudo make install && sudo /sbin/ldconfig;
         cd .. && wget -nv ftp://ftp.gnu.org/gnu/mpc/mpc-${MPC_VER}.tar.gz && tar zxf mpc-${MPC_VER}.tar.gz && cd mpc-${MPC_VER};
         ./configure;
-        make -j4 && sudo make install && sudo /sbin/ldconfig;
+        make -s -j4 && sudo make install && sudo /sbin/ldconfig;
         cd .. && wget -nv https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.xz && tar Jxf binutils-${BINUTILS_VER}.tar.xz && mkdir build_binutils-${BINUTILS_VER}_arm && cd build_binutils-${BINUTILS_VER}_arm;
         ../binutils-${BINUTILS_VER}/configure --prefix=${ARM_CROSS_PATH} --program-prefix=${CROSS_COMPILER} --target=${HOST} --enable-lto --enable-interwork --disable-multilib --with-arch=${ARCH_FULL};
-        make -j4 && make install;
+        make -s -j4 && make install;
         cd .. && wget -nv https://www.kernel.org/pub/linux/kernel/v${KERNEL_VER}/linux-${KERNEL_VER_FULL}.tar.xz && tar Jxf linux-${KERNEL_VER_FULL}.tar.xz && cd linux-${KERNEL_VER_FULL};
         make ARCH=${ARCH} INSTALL_HDR_PATH=${ARM_CROSS_PATH}/${HOST} headers_install;
         cd .. && wget -nv https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.bz2 && tar jxf gcc-${GCC_VER}.tar.bz2 && mkdir build_gcc-${GCC_VER}_arm && cd build_gcc-${GCC_VER}_arm;
         ../gcc-${GCC_VER}/configure --prefix=${ARM_CROSS_PATH} --program-prefix=${CROSS_COMPILER} --target=${HOST} --enable-lto --enable-languages=c,c++ --disable-multilib --enable-interwork --with-arch=${ARCH_FULL} --with-fpu=vfp --with-float=hard --enable-checking=release --enable-linker-build-id --enable-gnu-unique-object --enable-threads=posix --disable-sjlj-exceptions --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes;
-        make -j4 all-gcc && make install-gcc;
+        make -s -j4 all-gcc && make install-gcc;
         cd .. && wget -nv https://ftp.gnu.org/gnu/glibc/glibc-${GLIBC_VER}.tar.xz && tar Jxf glibc-${GLIBC_VER}.tar.xz && mkdir build_glibc-${GLIBC_VER}_arm && cd build_glibc-${GLIBC_VER}_arm;
         ../glibc-${GLIBC_VER}/configure --prefix=${ARM_CROSS_PATH}/${HOST} --build=${MACHTYPE} --host=${HOST} --target=${HOST} --with-headers=${ARM_CROSS_PATH}/${HOST}/include --disable-multilib --enable-add-ons libc_cv_forced_unwind=yes;
-        make install-bootstrap-headers=yes install-headers && make -j4 csu/subdir_lib && install csu/crt1.o csu/crti.o csu/crtn.o ${ARM_CROSS_PATH}/${HOST}/lib && ${CROSS_COMPILER}gcc -nostdlib -nostartfiles -shared -x c /dev/null -o ${ARM_CROSS_PATH}/${HOST}/lib/libc.so && touch ${ARM_CROSS_PATH}/${HOST}/include/gnu/stubs.h;
-        cd ../build_gcc-${GCC_VER}_arm && make -j4 all-target-libgcc && make install-target-libgcc;
-        cd ../build_glibc-${GLIBC_VER}_arm && make -j4 && make install;
-        cd ../build_gcc-${GCC_VER}_arm && make -j4 && make install;
+        make install-bootstrap-headers=yes install-headers && make -s -j4 csu/subdir_lib && install csu/crt1.o csu/crti.o csu/crtn.o ${ARM_CROSS_PATH}/${HOST}/lib && ${CROSS_COMPILER}gcc -nostdlib -nostartfiles -shared -x c /dev/null -o ${ARM_CROSS_PATH}/${HOST}/lib/libc.so && touch ${ARM_CROSS_PATH}/${HOST}/include/gnu/stubs.h;
+        cd ../build_gcc-${GCC_VER}_arm && make -s -j4 all-target-libgcc && make install-target-libgcc;
+        cd ../build_glibc-${GLIBC_VER}_arm && make -s -j4 && make install;
+        cd ../build_gcc-${GCC_VER}_arm && make -s -j4 && make install;
         cd ../../;
         tar czf cache/${ARM_CROSS}.tar.gz --no-same-owner --no-same-permissions ${ARM_CROSS};
       else
@@ -134,31 +135,31 @@ before_script:
   - mkdir lib && cd lib
   - wget -nv https://zlib.net/zlib-${ZLIB_VER}.tar.gz && tar zxf zlib-${ZLIB_VER}.tar.gz && cd zlib-${ZLIB_VER}
   - ./configure --prefix=/usr/local --static
-  - make -j4 && sudo make -j4 install
+  - make -s -j4 && sudo make -j4 install
   - cd .. && wget -nv https://ftp.gnu.org/gnu/ncurses/ncurses-${NCURSES_VER}.tar.gz && tar zxf ncurses-${NCURSES_VER}.tar.gz && cd ncurses-${NCURSES_VER}
   - if [ "$HOST" != "" ]; then
       CPPFLAGS=-P ./configure --prefix=/usr/local --host=${HOST};
     else
       CPPFLAGS=-P ./configure --prefix=/usr/local;
     fi
-  - make -j4 && sudo make -j4 install
+  - make -s -j4 && sudo make -j4 install
   - cd .. && wget -nv https://ftp.gnu.org/gnu/libiconv/libiconv-${LIBICONV_VER}.tar.gz && tar zxf libiconv-${LIBICONV_VER}.tar.gz && cd libiconv-${LIBICONV_VER}
   - if [ "$HOST" != "" ]; then
       ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no --host=${HOST};
     else
       ./configure --prefix=/usr/local --enable-static=yes --enable-shared=no;
     fi
-  - make -j4 && sudo make -j4 install
+  - make -s -j4 && sudo make -j4 install
   - cd .. && wget -nv https://ftp.gnu.org/gnu/readline/readline-${READLINE_VER}.tar.gz && tar zxf readline-${READLINE_VER}.tar.gz && cd readline-${READLINE_VER}
   - if [ "$HOST" != "" ]; then
       ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib --host=${HOST};
     else
       ./configure --enable-shared=no CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib;
     fi
-  - make -j4 && sudo make -j4 install
+  - make -s -j4 && sudo make -j4 install
   - cd .. && wget -nv https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
   - ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM}
-  - make -j4 && make -j1 test && sudo make -j4 install_sw
+  - make -s -j4 && make -j1 test && sudo make -j4 install_sw
   - if [ "$PLATFORM" == linux-x86_64 ]; then
       cd ..;
       wget -nv https://software.intel.com/sites/default/files/article/181731/intel-aesni-sample-library-v1.2.zip;
