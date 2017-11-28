@@ -176,6 +176,9 @@
     <ClInclude Include="openssl\asn1t.h">
       <Filter>openssl</Filter>
     </ClInclude>
+    <ClInclude Include="openssl\async.h">
+      <Filter>openssl</Filter>
+    </ClInclude>
     <ClInclude Include="openssl\bio.h">
       <Filter>openssl</Filter>
     </ClInclude>
@@ -212,10 +215,10 @@
     <ClInclude Include="openssl\crypto.h">
       <Filter>openssl</Filter>
     </ClInclude>
-    <ClInclude Include="openssl\des.h">
+    <ClInclude Include="openssl\ct.h">
       <Filter>openssl</Filter>
     </ClInclude>
-    <ClInclude Include="openssl\des_old.h">
+    <ClInclude Include="openssl\des.h">
       <Filter>openssl</Filter>
     </ClInclude>
     <ClInclude Include="openssl\dh.h">
@@ -260,10 +263,7 @@
     <ClInclude Include="openssl\idea.h">
       <Filter>openssl</Filter>
     </ClInclude>
-    <ClInclude Include="openssl\krb5_asn.h">
-      <Filter>openssl</Filter>
-    </ClInclude>
-    <ClInclude Include="openssl\kssl.h">
+    <ClInclude Include="openssl\kdf.h">
       <Filter>openssl</Filter>
     </ClInclude>
     <ClInclude Include="openssl\lhash.h">
@@ -311,9 +311,6 @@
     <ClInclude Include="openssl\pkcs7.h">
       <Filter>openssl</Filter>
     </ClInclude>
-    <ClInclude Include="openssl\pqueue.h">
-      <Filter>openssl</Filter>
-    </ClInclude>
     <ClInclude Include="openssl\rand.h">
       <Filter>openssl</Filter>
     </ClInclude>
@@ -350,9 +347,6 @@
     <ClInclude Include="openssl\ssl2.h">
       <Filter>openssl</Filter>
     </ClInclude>
-    <ClInclude Include="openssl\ssl23.h">
-      <Filter>openssl</Filter>
-    </ClInclude>
     <ClInclude Include="openssl\ssl3.h">
       <Filter>openssl</Filter>
     </ClInclude>
@@ -372,9 +366,6 @@
       <Filter>openssl</Filter>
     </ClInclude>
     <ClInclude Include="openssl\ui.h">
-      <Filter>openssl</Filter>
-    </ClInclude>
-    <ClInclude Include="openssl\ui_compat.h">
       <Filter>openssl</Filter>
     </ClInclude>
     <ClInclude Include="openssl\whrlpool.h">

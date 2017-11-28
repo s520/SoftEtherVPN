@@ -69,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="libeay32.lib ssleay32.lib zlib.lib libintelaes.lib"
+				AdditionalDependencies="libcrypto.lib libssl.lib zlib.lib libintelaes.lib"
 				AdditionalLibraryDirectories="$(SolutionDir)BuildFiles\Library\$(PlatformName)_$(ConfigurationName)"
 			/>
 			<Tool
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="libeay32.lib ssleay32.lib zlib.lib libintelaes.lib"
+				AdditionalDependencies="libcrypto.lib libssl.lib zlib.lib libintelaes.lib"
 				AdditionalLibraryDirectories="$(SolutionDir)BuildFiles\Library\$(PlatformName)_$(ConfigurationName)"
 			/>
 			<Tool
@@ -212,7 +212,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="libeay32.lib ssleay32.lib zlib.lib libintelaes.lib"
+				AdditionalDependencies="libcrypto.lib libssl.lib zlib.lib libintelaes.lib"
 				AdditionalLibraryDirectories="$(SolutionDir)BuildFiles\Library\$(PlatformName)_$(ConfigurationName)"
 			/>
 			<Tool
@@ -286,7 +286,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="libeay32.lib ssleay32.lib zlib.lib libintelaes.lib"
+				AdditionalDependencies="libcrypto.lib libssl.lib zlib.lib libintelaes.lib"
 				AdditionalLibraryDirectories="$(SolutionDir)BuildFiles\Library\$(PlatformName)_$(ConfigurationName)"
 			/>
 			<Tool
@@ -531,6 +531,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\openssl\async.h"
+				>
+			</File>
+			<File
 				RelativePath=".\openssl\bio.h"
 				>
 			</File>
@@ -579,11 +583,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\openssl\des.h"
+				RelativePath=".\openssl\ct.h"
 				>
 			</File>
 			<File
-				RelativePath=".\openssl\des_old.h"
+				RelativePath=".\openssl\des.h"
 				>
 			</File>
 			<File
@@ -643,11 +647,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\openssl\krb5_asn.h"
-				>
-			</File>
-			<File
-				RelativePath=".\openssl\kssl.h"
+				RelativePath=".\openssl\kdf.h"
 				>
 			</File>
 			<File
@@ -711,10 +711,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\openssl\pqueue.h"
-				>
-			</File>
-			<File
 				RelativePath=".\openssl\rand.h"
 				>
 			</File>
@@ -763,10 +759,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\openssl\ssl23.h"
-				>
-			</File>
-			<File
 				RelativePath=".\openssl\ssl3.h"
 				>
 			</File>
@@ -792,10 +784,6 @@
 			</File>
 			<File
 				RelativePath=".\openssl\ui.h"
-				>
-			</File>
-			<File
-				RelativePath=".\openssl\ui_compat.h"
 				>
 			</File>
 			<File
