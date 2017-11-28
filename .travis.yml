@@ -68,6 +68,7 @@ matrix:
       addons:
         apt:
           packages:
+            - g++-arm-linux-gnueabihf
             - golang-1.6
             - qemu-user-static
           sources:
@@ -124,8 +125,12 @@ before_script:
     fi
   - make -j4 >/dev/null && sudo make -j4 install >/dev/null
   - cd .. && wget -nv https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz && tar zxf openssl-${OPENSSL_VER}.tar.gz && cd openssl-${OPENSSL_VER}
-  - ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM}
-  - make -j4 >/dev/null && make -j1 test && sudo make -j4 install_sw  >/dev/null
+  - if [ "$HOST" != "" ]; then
+      CC=${CROSS_COMPILER}gcc CXX=${CROSS_COMPILER}g++ AR=${CROSS_COMPILER}ar RANLIB=${CROSS_COMPILER}ranlib LD=${CROSS_COMPILER}ld ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM};
+    else
+      ./Configure --prefix=/usr/local -I/usr/local/include -L/usr/local/lib zlib no-shared ${PLATFORM};
+    fi
+  - make -j4 >/dev/null && make -j4 test && sudo make -j4 install_sw  >/dev/null
   - if [ "$PLATFORM" == linux-x86_64 ]; then
       cd ..;
       wget -nv https://software.intel.com/sites/default/files/article/181731/intel-aesni-sample-library-v1.2.zip;
